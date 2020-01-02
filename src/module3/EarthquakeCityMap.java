@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //Processing library
+import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.geo.Location;
 import processing.core.PApplet;
 
@@ -36,7 +37,7 @@ public class EarthquakeCityMap extends PApplet {
 
 	// IF YOU ARE WORKING OFFLINE, change the value of this variable to true
 	private static final boolean offline = false;
-	
+
 	// Less than this threshold is a light earthquake
 	public static final float THRESHOLD_MODERATE = 5;
 	// Less than this threshold is a minor earthquake
@@ -44,14 +45,14 @@ public class EarthquakeCityMap extends PApplet {
 
 	/** This is where to find the local tiles, for working without an Internet connection */
 	public static String mbTilesString = "blankLight-1-3.mbtiles";
-	
+
 	// The map
 	private UnfoldingMap map;
-	
+
 	//feed with magnitude 2.5+ Earthquakes
 	private String earthquakesURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom";
 
-	
+
 	public void setup() {
 		size(950, 600, OPENGL);
 
@@ -65,66 +66,89 @@ public class EarthquakeCityMap extends PApplet {
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 			//earthquakesURL = "2.5_week.atom";
 		}
-		
+
 	    map.zoomToLevel(2);
-	    MapUtils.createDefaultEventDispatcher(this, map);	
-			
+	    MapUtils.createDefaultEventDispatcher(this, map);
+
 	    // The List you will populate with new SimplePointMarkers
 	    List<Marker> markers = new ArrayList<Marker>();
 
 	    //Use provided parser to collect properties for each earthquake
 	    //PointFeatures have a getLocation method
 	    List<PointFeature> earthquakes = ParseFeed.parseEarthquake(this, earthquakesURL);
-	    
-	    //TODO (Step 3): Add a loop here that calls createMarker (see below) 
-	    // to create a new SimplePointMarker for each PointFeature in 
-	    // earthquakes.  Then add each new SimplePointMarker to the 
+
+	    //TODO (Step 3): Add a loop here that calls createMarker (see below)
+	    // to create a new SimplePointMarker for each PointFeature in
+	    // earthquakes.  Then add each new SimplePointMarker to the
 	    // List markers (so that it will be added to the map in the line below)
 
-	    Location valLoc = new Location (-38.14f, -73.03f);
-	    Marker val = new SimplePointMarker(valLoc);
-	    val.setColor(color(255,209,0));
-//	    val.setStrokeColor(16711680);
-	    map.addMarker(val);
+		for (PointFeature earthquake : earthquakes) {
+//			System.out.println(earthquake.getLocation());
+//			System.out.println(earthquake.getProperties());
+//			Location eqLoc = new Location (earthquake.getLocation());
+//			markers.add(earthquake.getLocation() ,earthquake.getProperties());
+			markers.add(createMarker(earthquake));
+		}
+
+
+//	    Location valLoc = new Location (-38.14f, -73.03f);
+////	    Marker val = new SimplePointMarker(valLoc);
+//		Feature valEq = new PointFeature(valLoc);
+//		valEq.addProperty("title", "Valdivia, Chile");
+//		valEq.addProperty("Magnitude", "9.5");
+//		valEq.addProperty("Date", "22 May, 1960");
+//		valEq.addProperty("Year", 1960);
+////	    val.setStrokeColor(16711680);
+//		System.out.println(valLoc);
+//		System.out.println(valEq.getProperties());
+//		Marker valMk = new SimplePointMarker(valLoc, valEq.getProperties());
+//		valMk.setColor(color(255,209,0));
+
+		map.addMarkers(markers);
 
 	    // Add the markers to the map so that they are displayed
 //	    map.addMarkers(markers);
 	}
-		
-	/* createMarker: A suggested helper method that takes in an earthquake 
+
+	/* createMarker: A suggested helper method that takes in an earthquake
 	 * feature and returns a SimplePointMarker for that earthquake
-	 * 
-	 * In step 3 You can use this method as-is.  Call it from a loop in the 
-	 * setp method.  
-	 * 
-	 * TODO (Step 4): Add code to this method so that it adds the proper 
-	 * styling to each marker based on the magnitude of the earthquake.  
+	 *
+	 * In step 3 You can use this method as-is.  Call it from a loop in the
+	 * setp method.
+	 *
+	 * TODO (Step 4): Add code to this method so that it adds the proper
+	 * styling to each marker based on the magnitude of the earthquake.
 	*/
 	private SimplePointMarker createMarker(PointFeature feature)
-	{  
+	{
 		// To print all of the features in a PointFeature (so you can see what they are)
-		// uncomment the line below.  Note this will only print if you call createMarker 
+		// uncomment the line below.  Note this will only print if you call createMarker
 		// from setup
 		//System.out.println(feature.getProperties());
-		
+
 		// Create a new SimplePointMarker at the location given by the PointFeature
 		SimplePointMarker marker = new SimplePointMarker(feature.getLocation());
-		
+
 		Object magObj = feature.getProperty("magnitude");
 		float mag = Float.parseFloat(magObj.toString());
-		
-		// Here is an example of how to use Processing's color method to generate 
-	    // an int that represents the color yellow.  
+
+		// Here is an example of how to use Processing's color method to generate
+	    // an int that represents the color yellow.
 	    int yellow = color(255, 255, 0);
-		
-		// TODO (Step 4): Add code below to style the marker's size and color 
-	    // according to the magnitude of the earthquake.  
-	    // Don't forget about the constants THRESHOLD_MODERATE and 
+		int grey = color(150,150,150);
+
+		// TODO (Step 4): Add code below to style the marker's size and color
+	    // according to the magnitude of the earthquake.
+	    // Don't forget about the constants THRESHOLD_MODERATE and
 	    // THRESHOLD_LIGHT, which are declared above.
-	    // Rather than comparing the magnitude to a number directly, compare 
-	    // the magnitude to these variables (and change their value in the code 
+	    // Rather than comparing the magnitude to a number directly, compare
+	    // the magnitude to these variables (and change their value in the code
 	    // above if you want to change what you mean by "moderate" and "light")
-	    
+	    if(mag < 5.0) {
+	    	marker.setColor(grey);
+		}else {
+	    	marker.setColor(yellow);
+		}
 	    
 	    // Finally return the marker
 	    return marker;
