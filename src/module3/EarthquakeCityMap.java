@@ -61,13 +61,13 @@ public class EarthquakeCityMap extends PApplet {
 		    earthquakesURL = "2.5_week.atom"; 	// Same feed, saved Aug 7, 2015, for working offline
 		}
 		else {
-//			map = new UnfoldingMap(this, 200, 50, 700, 500, new Google.GoogleMapProvider());
-			map = new UnfoldingMap(this, 200, 50, 700, 500, new Microsoft.HybridProvider());
+			map = new UnfoldingMap(this, 200, 50, 700, 500, new Google.GoogleMapProvider());
+//			map = new UnfoldingMap(this, 200, 50, 700, 500, new Microsoft.HybridProvider());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 			//earthquakesURL = "2.5_week.atom";
 		}
 
-	    map.zoomToLevel(2);
+	    map.zoomToLevel(3);
 	    MapUtils.createDefaultEventDispatcher(this, map);
 
 	    // The List you will populate with new SimplePointMarkers
@@ -83,26 +83,9 @@ public class EarthquakeCityMap extends PApplet {
 	    // List markers (so that it will be added to the map in the line below)
 
 		for (PointFeature earthquake : earthquakes) {
-//			System.out.println(earthquake.getLocation());
-//			System.out.println(earthquake.getProperties());
-//			Location eqLoc = new Location (earthquake.getLocation());
-//			markers.add(earthquake.getLocation() ,earthquake.getProperties());
+
 			markers.add(createMarker(earthquake));
 		}
-
-
-//	    Location valLoc = new Location (-38.14f, -73.03f);
-////	    Marker val = new SimplePointMarker(valLoc);
-//		Feature valEq = new PointFeature(valLoc);
-//		valEq.addProperty("title", "Valdivia, Chile");
-//		valEq.addProperty("Magnitude", "9.5");
-//		valEq.addProperty("Date", "22 May, 1960");
-//		valEq.addProperty("Year", 1960);
-////	    val.setStrokeColor(16711680);
-//		System.out.println(valLoc);
-//		System.out.println(valEq.getProperties());
-//		Marker valMk = new SimplePointMarker(valLoc, valEq.getProperties());
-//		valMk.setColor(color(255,209,0));
 
 		map.addMarkers(markers);
 
@@ -144,13 +127,18 @@ public class EarthquakeCityMap extends PApplet {
 	    // Rather than comparing the magnitude to a number directly, compare
 	    // the magnitude to these variables (and change their value in the code
 	    // above if you want to change what you mean by "moderate" and "light")
-	    if(mag < 5.0) {
-	    	marker.setColor(grey);
+		if (mag < 4.0) {
+			marker.setColor(grey);
+			marker.setRadius(4);
+		} else if (mag <= 5) {
+			marker.setColor(yellow);
+			marker.setRadius(6);
 		}else {
-	    	marker.setColor(yellow);
+			marker.setColor(color(255, 0, 0));
+			marker.setRadius(8);
 		}
-	    
-	    // Finally return the marker
+
+			// Finally return the marker
 	    return marker;
 	}
 	
@@ -158,6 +146,8 @@ public class EarthquakeCityMap extends PApplet {
 	    background(10);
 	    map.draw();
 	    addKey();
+
+
 	}
 
 
@@ -166,6 +156,25 @@ public class EarthquakeCityMap extends PApplet {
 	private void addKey() 
 	{	
 		// Remember you can use Processing's graphics methods here
-	
+		rect(30, 50, 150, 250);
+		fill(color(0,0,0));
+		text("Magnitude 5 >= 6", 45, 70);
+		text("Magnitude 4 >= 5", 45, 90);
+		text("Magnitude >= 4", 45, 110);
+
+		textSize(14);
+		textAlign(LEFT);
+		fill(color(255, 0, 0));
+		rect(35, 65, 5,5);
+
+
+		fill(color(255, 255, 0));
+		rect(35, 85, 5,5);
+
+		fill(color(150,150,150));
+		rect(35, 105, 5,5);
+
+		fill(color(255,255,255));
+
 	}
 }
