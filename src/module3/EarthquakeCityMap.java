@@ -61,8 +61,8 @@ public class EarthquakeCityMap extends PApplet {
 		    earthquakesURL = "2.5_week.atom"; 	// Same feed, saved Aug 7, 2015, for working offline
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 700, 500, new Google.GoogleMapProvider());
-//			map = new UnfoldingMap(this, 200, 50, 700, 500, new Microsoft.HybridProvider());
+//			map = new UnfoldingMap(this, 200, 50, 700, 500, new Google.GoogleMapProvider());
+			map = new UnfoldingMap(this, 200, 50, 700, 500, new Microsoft.HybridProvider());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 			//earthquakesURL = "2.5_week.atom";
 		}
@@ -119,6 +119,7 @@ public class EarthquakeCityMap extends PApplet {
 	    // an int that represents the color yellow.
 	    int yellow = color(255, 255, 0);
 		int grey = color(150,150,150);
+		int red = color(255, 0, 0);
 
 		// TODO (Step 4): Add code below to style the marker's size and color
 	    // according to the magnitude of the earthquake.
@@ -134,7 +135,7 @@ public class EarthquakeCityMap extends PApplet {
 			marker.setColor(yellow);
 			marker.setRadius(6);
 		}else {
-			marker.setColor(color(255, 0, 0));
+			marker.setColor(red);
 			marker.setRadius(8);
 		}
 
@@ -156,7 +157,7 @@ public class EarthquakeCityMap extends PApplet {
 	private void addKey() 
 	{	
 		// Remember you can use Processing's graphics methods here
-		rect(30, 50, 150, 250);
+		rect(30, 50, 150, 150);
 		fill(color(0,0,0));
 		text("Magnitude 5 >= 6", 45, 70);
 		text("Magnitude 4 >= 5", 45, 90);

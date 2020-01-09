@@ -3,6 +3,8 @@ package module4;
 import de.fhpotsdam.unfolding.data.PointFeature;
 import de.fhpotsdam.unfolding.marker.SimplePointMarker;
 import processing.core.PGraphics;
+import processing.core.PApplet;
+
 
 /** Implements a visual marker for earthquakes on an earthquake map
  * 
@@ -38,7 +40,7 @@ public abstract class EarthquakeMarker extends SimplePointMarker
 
 	// ADD constants for colors
 
-	
+
 	// abstract method implemented in derived classes
 	public abstract void drawEarthquake(PGraphics pg, float x, float y);
 		

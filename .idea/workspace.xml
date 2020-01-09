@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5aedc714-d486-456a-922d-e0bc40dd6fdd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/module3/EarthquakeCityMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/module3/EarthquakeCityMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/module4/EarthquakeCityMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/module4/EarthquakeCityMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/module4/EarthquakeMarker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/module4/EarthquakeMarker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/module4/LandQuakeMarker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/module4/LandQuakeMarker.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +24,9 @@
   <component name="FavoritesManager">
     <favorites_list name="UCSDUnfoldingMaps" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1VTwxbKJfCQ91EPNIZZT6RcurLO" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -30,18 +36,30 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JSON" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="Applet.EarthquakeCityMap">
+  <component name="RunManager" selected="Applet.EarthQuakeCityMap4">
     <configuration name="Beach" type="Applet">
       <option name="HEIGHT" value="200" />
       <option name="MAIN_CLASS_NAME" value="module3.Beach" />
       <module name="UCSDUnfoldingMaps" />
       <option name="WIDTH" value="200" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EarthQuakeCityMap4" type="Applet">
+      <option name="HEIGHT" value="600" />
+      <option name="MAIN_CLASS_NAME" value="module4.EarthquakeCityMap" />
+      <module name="UCSDUnfoldingMaps" />
+      <option name="WIDTH" value="960" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -69,8 +87,9 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Applet.EarthquakeCityMap" />
       <item itemvalue="Applet.Beach" />
+      <item itemvalue="Applet.EarthquakeCityMap" />
+      <item itemvalue="Applet.EarthQuakeCityMap4" />
       <item itemvalue="Application.Beach" />
     </list>
   </component>
@@ -104,34 +123,48 @@
       <screen x="0" y="23" width="1440" height="823" />
     </state>
     <state x="320" y="100" key="#Project_Structure/0.23.1440.823@0.23.1440.823" timestamp="1577754814237" />
-    <state x="283" y="72" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1577890617609">
-      <screen x="0" y="23" width="1440" height="823" />
+    <state x="-363" y="-994" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1578581343346">
+      <screen x="-740" y="-1057" width="1920" height="1057" />
     </state>
+    <state x="-363" y="-994" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.823/-740.-1057.1920.1057@-740.-1057.1920.1057" timestamp="1578581343346" />
     <state x="283" y="72" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.823@0.23.1440.823" timestamp="1577890617609" />
+    <state x="-71" y="-719" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1578581042347">
+      <screen x="-740" y="-1057" width="1920" height="1057" />
+    </state>
+    <state x="-71" y="-719" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.823/-740.-1057.1920.1057@-740.-1057.1920.1057" timestamp="1578581042347" />
     <state x="533" y="151" key="#com.intellij.ide.util.MemberChooser" timestamp="1577888616228">
       <screen x="0" y="23" width="1440" height="823" />
     </state>
     <state x="533" y="151" key="#com.intellij.ide.util.MemberChooser/0.23.1440.823@0.23.1440.823" timestamp="1577888616228" />
-    <state x="457" y="225" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1577890250791">
-      <screen x="0" y="23" width="1440" height="823" />
+    <state x="-131" y="-798" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1578581341257">
+      <screen x="-740" y="-1057" width="1920" height="1057" />
     </state>
+    <state x="-131" y="-798" key="#com.intellij.ide.util.TreeClassChooserDialog/0.23.1440.823/-740.-1057.1920.1057@-740.-1057.1920.1057" timestamp="1578581341257" />
     <state x="457" y="225" key="#com.intellij.ide.util.TreeClassChooserDialog/0.23.1440.823@0.23.1440.823" timestamp="1577890250791" />
-    <state width="1398" height="273" key="GridCell.Tab.0.bottom" timestamp="1577985230969">
-      <screen x="0" y="23" width="1440" height="823" />
+    <state width="1878" height="361" key="GridCell.Tab.0.bottom" timestamp="1578589589142">
+      <screen x="-740" y="-1057" width="1920" height="1057" />
     </state>
-    <state width="1398" height="273" key="GridCell.Tab.0.bottom/0.23.1440.823@0.23.1440.823" timestamp="1577985230969" />
-    <state width="1398" height="273" key="GridCell.Tab.0.center" timestamp="1577985230968">
-      <screen x="0" y="23" width="1440" height="823" />
+    <state width="1878" height="361" key="GridCell.Tab.0.bottom/0.23.1440.823/-740.-1057.1920.1057@-740.-1057.1920.1057" timestamp="1578589589142" />
+    <state width="1398" height="273" key="GridCell.Tab.0.bottom/0.23.1440.823@0.23.1440.823" timestamp="1577986839068" />
+    <state width="1878" height="369" key="GridCell.Tab.0.bottom/0.23.1440.877/-740.-1057.1920.1003@-740.-1057.1920.1003" timestamp="1578326694150" />
+    <state width="1878" height="361" key="GridCell.Tab.0.center" timestamp="1578589589139">
+      <screen x="-740" y="-1057" width="1920" height="1057" />
     </state>
-    <state width="1398" height="273" key="GridCell.Tab.0.center/0.23.1440.823@0.23.1440.823" timestamp="1577985230968" />
-    <state width="1398" height="273" key="GridCell.Tab.0.left" timestamp="1577985230968">
-      <screen x="0" y="23" width="1440" height="823" />
+    <state width="1878" height="361" key="GridCell.Tab.0.center/0.23.1440.823/-740.-1057.1920.1057@-740.-1057.1920.1057" timestamp="1578589589139" />
+    <state width="1398" height="273" key="GridCell.Tab.0.center/0.23.1440.823@0.23.1440.823" timestamp="1577986839067" />
+    <state width="1878" height="369" key="GridCell.Tab.0.center/0.23.1440.877/-740.-1057.1920.1003@-740.-1057.1920.1003" timestamp="1578326694150" />
+    <state width="1878" height="361" key="GridCell.Tab.0.left" timestamp="1578589589139">
+      <screen x="-740" y="-1057" width="1920" height="1057" />
     </state>
-    <state width="1398" height="273" key="GridCell.Tab.0.left/0.23.1440.823@0.23.1440.823" timestamp="1577985230968" />
-    <state width="1398" height="273" key="GridCell.Tab.0.right" timestamp="1577985230968">
-      <screen x="0" y="23" width="1440" height="823" />
+    <state width="1878" height="361" key="GridCell.Tab.0.left/0.23.1440.823/-740.-1057.1920.1057@-740.-1057.1920.1057" timestamp="1578589589139" />
+    <state width="1398" height="273" key="GridCell.Tab.0.left/0.23.1440.823@0.23.1440.823" timestamp="1577986839066" />
+    <state width="1878" height="369" key="GridCell.Tab.0.left/0.23.1440.877/-740.-1057.1920.1003@-740.-1057.1920.1003" timestamp="1578326694149" />
+    <state width="1878" height="361" key="GridCell.Tab.0.right" timestamp="1578589589141">
+      <screen x="-740" y="-1057" width="1920" height="1057" />
     </state>
-    <state width="1398" height="273" key="GridCell.Tab.0.right/0.23.1440.823@0.23.1440.823" timestamp="1577985230968" />
+    <state width="1878" height="361" key="GridCell.Tab.0.right/0.23.1440.823/-740.-1057.1920.1057@-740.-1057.1920.1057" timestamp="1578589589141" />
+    <state width="1398" height="273" key="GridCell.Tab.0.right/0.23.1440.823@0.23.1440.823" timestamp="1577986839067" />
+    <state width="1878" height="369" key="GridCell.Tab.0.right/0.23.1440.877/-740.-1057.1920.1003@-740.-1057.1920.1003" timestamp="1578326694150" />
     <state width="1398" height="264" key="GridCell.Tab.1.bottom" timestamp="1577754922552">
       <screen x="0" y="23" width="1440" height="823" />
     </state>
@@ -156,6 +189,11 @@
       <screen x="0" y="23" width="1440" height="823" />
     </state>
     <state x="397" y="267" key="com.intellij.ide.util.TipDialog/0.23.1440.823@0.23.1440.823" timestamp="1577325677424" />
+    <state x="-100" y="-920" width="639" height="729" key="find.popup" timestamp="1578590529329">
+      <screen x="-740" y="-1057" width="1920" height="1003" />
+    </state>
+    <state x="-100" y="-920" width="639" height="729" key="find.popup/0.23.1440.823/-740.-1057.1920.1057@-740.-1057.1920.1057" timestamp="1578585180669" />
+    <state x="-100" y="-920" width="639" height="729" key="find.popup/0.23.1440.877/-740.-1057.1920.1003@-740.-1057.1920.1003" timestamp="1578590529329" />
     <state x="97" y="57" key="new project wizard" timestamp="1577325852332">
       <screen x="0" y="23" width="1440" height="823" />
     </state>

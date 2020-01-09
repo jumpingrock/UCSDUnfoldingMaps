@@ -60,7 +60,11 @@ public class EarthquakeCityMap extends PApplet {
 	// A List of country markers
 	private List<Marker> countryMarkers;
 	
-	public void setup() {		
+	public void setup() {
+		int yellow = color(255, 255, 0);
+		int grey = color(150,150,150);
+		int red = color(255, 0, 0);
+
 		// (1) Initializing canvas and map tiles
 		size(900, 700, OPENGL);
 		if (offline) {
@@ -76,8 +80,8 @@ public class EarthquakeCityMap extends PApplet {
 		
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
-		//earthquakesURL = "test1.atom";
-		//earthquakesURL = "test2.atom";
+//		earthquakesURL = "test1.atom";
+		earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
 		//earthquakesURL = "quiz1.atom";
@@ -101,6 +105,7 @@ public class EarthquakeCityMap extends PApplet {
 	    
 	    for(PointFeature feature : earthquakes) {
 		  //check if LandQuake
+//			System.out.println(feature.toString())
 		  if(isLand(feature)) {
 		    quakeMarkers.add(new LandQuakeMarker(feature));
 		  }
@@ -111,7 +116,7 @@ public class EarthquakeCityMap extends PApplet {
 	    }
 
 	    // could be used for debugging
-	    printQuakes();
+	    printQuakes(quakeMarkers, countryMarkers);
 	 		
 	    // (3) Add markers to map
 	    //     NOTE: Country markers are not added to the map.  They are used
@@ -170,10 +175,10 @@ public class EarthquakeCityMap extends PApplet {
 		// If isInCountry ever returns true, isLand should return true.
 		for (Marker m : countryMarkers) {
 			// TODO: Finish this method using the helper method isInCountry
-			
+			if(isInCountry(earthquake, m)) {
+				return true;
+			}
 		}
-		
-		
 		// not inside any country
 		return false;
 	}
@@ -184,7 +189,7 @@ public class EarthquakeCityMap extends PApplet {
 	 * ...
 	 * OCEAN QUAKES: numOceanQuakes
 	 * */
-	private void printQuakes() 
+	private void printQuakes(List<Marker> earthQuakeMarker, List<Marker> countryMarkers)
 	{
 		// TODO: Implement this method
 		// One (inefficient but correct) approach is to:
@@ -210,8 +215,36 @@ public class EarthquakeCityMap extends PApplet {
 		//  * If you know your Marker, m, is a LandQuakeMarker, then it has a "country" 
 		//      property set.  You can get the country with:
 		//        String country = (String)m.getProperty("country");
-		
-		
+		int sCounter = 0;
+		for(Marker cm :countryMarkers) {
+			int cCounter = 0;
+			String name = cm.getStringProperty("name");
+//			System.out.println("name of country in current loop: " + name);
+			for (Marker m : earthQuakeMarker) {
+				EarthquakeMarker em = (EarthquakeMarker)m;
+
+				if (em.isOnLand() == true  ) {
+					if(em.getProperty("country") == name){
+//						System.out.println(em.getProperty("country"));
+						cCounter +=1;
+					}
+				}
+			}
+			if (cCounter > 0 ){
+				System.out.println(name + " number of earthquake: " + cCounter);
+			}
+
+		}
+		for (Marker m : earthQuakeMarker) {
+			EarthquakeMarker em = (EarthquakeMarker)m;
+
+			if (em.isOnLand() == false  ) {
+				sCounter +=1;
+			}
+		}
+
+		System.out.println("Number of Seaquakes: " + sCounter);
+
 	}
 	
 	
@@ -234,7 +267,7 @@ public class EarthquakeCityMap extends PApplet {
 				// checking if inside
 				if(((AbstractShapeMarker)marker).isInsideByLocation(checkLoc)) {
 					earthquake.addProperty("country", country.getProperty("name"));
-						
+
 					// return if is inside one
 					return true;
 				}
