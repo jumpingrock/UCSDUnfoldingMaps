@@ -32,7 +32,7 @@ public class EarthquakeCityMap extends PApplet {
 	// per country.
 	
 	// You can ignore this.  It's to get rid of eclipse warnings
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	// IF YOU ARE WORKING OFFILINE, change the value of this variable to true
 	private static final boolean offline = false;
@@ -59,7 +59,9 @@ public class EarthquakeCityMap extends PApplet {
 
 	// A List of country markers
 	private List<Marker> countryMarkers;
-	
+
+
+
 	public void setup() {
 		int yellow = color(255, 255, 0);
 		int grey = color(150,150,150);
@@ -81,10 +83,10 @@ public class EarthquakeCityMap extends PApplet {
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
 //		earthquakesURL = "test1.atom";
-		earthquakesURL = "test2.atom";
+//		earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
-		//earthquakesURL = "quiz1.atom";
+		earthquakesURL = "quiz1.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -96,7 +98,7 @@ public class EarthquakeCityMap extends PApplet {
 		List<Feature> cities = GeoJSONReader.loadData(this, cityFile);
 		cityMarkers = new ArrayList<Marker>();
 		for(Feature city : cities) {
-		  cityMarkers.add(new CityMarker(city));
+			cityMarkers.add(new CityMarker(city));
 		}
 	    
 		//     STEP 3: read in earthquake RSS feed
@@ -131,6 +133,7 @@ public class EarthquakeCityMap extends PApplet {
 		background(0);
 		map.draw();
 		addKey();
+
 		
 	}
 	
@@ -139,7 +142,7 @@ public class EarthquakeCityMap extends PApplet {
 	private void addKey() {	
 		// Remember you can use Processing's graphics methods here
 		fill(255, 250, 240);
-		rect(25, 50, 150, 250);
+		rect(25, 50, 150, 450);
 		
 		fill(0);
 		textAlign(LEFT, CENTER);
@@ -152,11 +155,20 @@ public class EarthquakeCityMap extends PApplet {
 		ellipse(50, 175, 10, 10);
 		fill(color(0, 0, 255));
 		ellipse(50, 225, 5, 5);
-		
+		fill(0,255,255);
+		rect(50, 275, 5, 5);
+		fill(128, 42, 42);
+		triangle(45, 325, 50, 315, 55, 325);
+
 		fill(0, 0, 0);
 		text("5.0+ Magnitude", 75, 125);
 		text("4.0+ Magnitude", 75, 175);
 		text("Below 4.0", 75, 225);
+		text("Ocean Quakes", 75, 275);
+		text("Major City", 75, 325);
+
+
+
 	}
 
 	
@@ -215,6 +227,8 @@ public class EarthquakeCityMap extends PApplet {
 		//  * If you know your Marker, m, is a LandQuakeMarker, then it has a "country" 
 		//      property set.  You can get the country with:
 		//        String country = (String)m.getProperty("country");
+
+
 		int sCounter = 0;
 		for(Marker cm :countryMarkers) {
 			int cCounter = 0;
@@ -225,8 +239,9 @@ public class EarthquakeCityMap extends PApplet {
 
 				if (em.isOnLand() == true  ) {
 					if(em.getProperty("country") == name){
-//						System.out.println(em.getProperty("country"));
+						System.out.println(em.getMagnitude());
 						cCounter +=1;
+
 					}
 				}
 			}
@@ -240,14 +255,14 @@ public class EarthquakeCityMap extends PApplet {
 
 			if (em.isOnLand() == false  ) {
 				sCounter +=1;
+
 			}
+
 		}
 
 		System.out.println("Number of Seaquakes: " + sCounter);
 
 	}
-	
-	
 	
 	// helper method to test whether a given earthquake is in a given country
 	// This will also add the country property to the properties of the earthquake 
