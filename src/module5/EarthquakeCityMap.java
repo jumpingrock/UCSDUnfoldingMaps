@@ -8,14 +8,15 @@ import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.data.GeoJSONReader;
 import de.fhpotsdam.unfolding.data.PointFeature;
 import de.fhpotsdam.unfolding.geo.Location;
+import de.fhpotsdam.unfolding.marker.AbstractMarker;
 import de.fhpotsdam.unfolding.marker.AbstractShapeMarker;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
-import de.fhpotsdam.unfolding.providers.Google;
-import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
+import de.fhpotsdam.unfolding.providers.*;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
+import processing.core.PGraphics;
 
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
@@ -61,7 +62,7 @@ public class EarthquakeCityMap extends PApplet {
 	// NEW IN MODULE 5
 	private CommonMarker lastSelected;
 	private CommonMarker lastClicked;
-	
+
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
 		size(900, 700, OPENGL);
@@ -71,6 +72,10 @@ public class EarthquakeCityMap extends PApplet {
 		}
 		else {
 			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+//			map = new UnfoldingMap(this, 200, 50, 700, 500, new Yahoo.HybridProvider());
+//			map = new UnfoldingMap(this, 200, 50, 700, 500, new Microsoft.HybridProvider());
+//			map = new UnfoldingMap(this, 200, 50, 700, 500, new AcetateProvider.All());
+
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 		    //earthquakesURL = "2.5_week.atom";
 		}
@@ -146,6 +151,19 @@ public class EarthquakeCityMap extends PApplet {
 	private void selectMarkerIfHover(List<Marker> markers)
 	{
 		// TODO: Implement this method
+		for (Marker marker : markers) {
+			if(marker.isInside(map, mouseX, mouseY)){
+				marker.setSelected(true);
+//				lastSelected.showTitle();
+//				System.out.println(marker.isSelected());
+				if (lastSelected == null) {
+					lastSelected.setSelected(true);
+					lastSelected = (CommonMarker) marker;
+					lastSelected.showTitle();
+				}
+
+			}
+		}
 	}
 	
 	/** The event handler for mouse clicks
