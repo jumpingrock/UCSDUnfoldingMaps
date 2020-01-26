@@ -11,7 +11,7 @@ import processing.core.PGraphics;
  */
 public abstract class EarthquakeMarker extends CommonMarker
 {
-	
+
 	// Did the earthquake occur on land?  This will be set by the subclasses.
 	protected boolean isOnLand;
 
@@ -94,6 +94,15 @@ public abstract class EarthquakeMarker extends CommonMarker
 	public void showTitle(PGraphics pg, float x, float y)
 	{
 		// TODO: Implement this method
+		String title = getTitle();
+		pg.beginDraw();
+		pg.rect(x+5, y, 110+title.length()*4, 20);
+		pg.fill(0);
+		pg.textSize(12);
+		pg.textAlign(Math.round(x), Math.round(y));
+		pg.text(title, x+9, y+14, 100);
+		pg.fill(249,215,28);
+		pg.endDraw();
 		
 	}
 

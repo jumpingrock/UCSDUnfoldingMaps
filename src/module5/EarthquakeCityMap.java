@@ -8,10 +8,7 @@ import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.data.GeoJSONReader;
 import de.fhpotsdam.unfolding.data.PointFeature;
 import de.fhpotsdam.unfolding.geo.Location;
-import de.fhpotsdam.unfolding.marker.AbstractMarker;
-import de.fhpotsdam.unfolding.marker.AbstractShapeMarker;
-import de.fhpotsdam.unfolding.marker.Marker;
-import de.fhpotsdam.unfolding.marker.MultiMarker;
+import de.fhpotsdam.unfolding.marker.*;
 import de.fhpotsdam.unfolding.providers.*;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
@@ -65,15 +62,15 @@ public class EarthquakeCityMap extends PApplet {
 
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
-		size(900, 700, OPENGL);
+		size(900, 700);
 		if (offline) {
 		    map = new UnfoldingMap(this, 200, 50, 650, 600, new MBTilesMapProvider(mbTilesString));
 		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+//			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
 //			map = new UnfoldingMap(this, 200, 50, 700, 500, new Yahoo.HybridProvider());
-//			map = new UnfoldingMap(this, 200, 50, 700, 500, new Microsoft.HybridProvider());
+			map = new UnfoldingMap(this, 0, 0, 700, 500, new Microsoft.HybridProvider());
 //			map = new UnfoldingMap(this, 200, 50, 700, 500, new AcetateProvider.All());
 
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
@@ -151,17 +148,14 @@ public class EarthquakeCityMap extends PApplet {
 	private void selectMarkerIfHover(List<Marker> markers)
 	{
 		// TODO: Implement this method
+//		lastSelected.setSelected(false);
 		for (Marker marker : markers) {
 			if(marker.isInside(map, mouseX, mouseY)){
-				marker.setSelected(true);
-//				lastSelected.showTitle();
-//				System.out.println(marker.isSelected());
 				if (lastSelected == null) {
-					lastSelected.setSelected(true);
 					lastSelected = (CommonMarker) marker;
-					lastSelected.showTitle();
+					lastSelected.setSelected(true);
+//					return marker;
 				}
-
 			}
 		}
 	}
@@ -171,14 +165,91 @@ public class EarthquakeCityMap extends PApplet {
 	 * Or if a city is clicked, it will display all the earthquakes 
 	 * where the city is in the threat circle
 	 */
+	private void checkCitiesForClick(Marker cm)
+	{
+		if (lastClicked != null){
+			unhideMarkers();
+			lastClicked = null;
+			return;
+		}
+
+		for (Marker marker : cityMarkers)
+		{
+			if (!marker.isHidden() &&
+					marker.isInside(map, mouseX, mouseY) &&
+					lastClicked == null)
+			{
+				lastClicked = (CommonMarker)marker;
+			}
+			else {
+				marker.setHidden(true);
+			}
+		}
+		for (Marker qm: quakeMarkers) {
+			EarthquakeMarker mk = (EarthquakeMarker) qm;
+			if(lastClicked.getDistanceTo(mk.getLocation()) <= mk.threatCircle()) {
+				mk.setHidden(false);
+			}else {
+				mk.setHidden(true);
+			}
+
+		}
+
+	}
+	private void checkEQForClick()
+	{
+		if (lastClicked != null){
+			unhideMarkers();
+			lastClicked = null;
+			return;
+		}
+		for (Marker marker : quakeMarkers)
+		{
+			if (!marker.isHidden() &&
+					marker.isInside(map, mouseX, mouseY) &&
+					lastClicked == null)
+			{
+				lastClicked = (CommonMarker)marker;
+			}
+			else {
+				marker.setHidden(true);
+			}
+		}
+		for (Marker cm: cityMarkers) {
+			EarthquakeMarker cmk = (EarthquakeMarker) cm;
+			if(lastClicked.getDistanceTo(cmk.getLocation()) <= cmk.threatCircle()) {
+				cmk.setHidden(false);
+			}else {
+				cmk.setHidden(true);
+			}
+
+		}
+
+	}
+
 	@Override
 	public void mouseClicked()
 	{
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
+		for (Marker qm: quakeMarkers) {
+			if(qm.isInside(map, mouseX,mouseY)) {
+				checkEQForClick();
+				return;
+			}
+		}
+		for (Marker cm :cityMarkers) {
+			if(cm.isInside(map, mouseX,mouseY)) {
+				checkCitiesForClick(cm);
+				return;
+			}
+		}
+
+
 	}
-	
+
+
 	
 	// loop over and unhide all markers
 	private void unhideMarkers() {
@@ -196,8 +267,8 @@ public class EarthquakeCityMap extends PApplet {
 		// Remember you can use Processing's graphics methods here
 		fill(255, 250, 240);
 		
-		int xbase = 25;
-		int ybase = 50;
+		int xbase = 650;
+		int ybase = 10;
 		
 		rect(xbase, ybase, 150, 250);
 		

@@ -55,10 +55,15 @@ public class CityMarker extends CommonMarker {
 	public void showTitle(PGraphics pg, float x, float y)
 	{
 		// TODO: Implement this method
-
+		String title = getCity();
 		pg.beginDraw();
-		pg.rect(x+10, y+10, 100, 30);
+		pg.rect(x+5, y, 50+title.length()*3, 20);
+		pg.fill(0);
+		pg.textSize(12);
+		pg.textAlign(Math.round(x), Math.round(y));
+		pg.text(title, x+9, y+14, 100);
 		pg.fill(249,215,28);
+		pg.endDraw();
 
 	}
 	
