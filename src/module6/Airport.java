@@ -1,12 +1,19 @@
 package module6;
 
-public class Airport {
+import java.util.Collections;
+import java.util.Comparator;
+
+public class Airport implements Comparable<Airport>  {
     private String city;
     private String country;
     private String code3;
 
     public String getCity() {
         return city;
+    }
+
+    public int compareTo(Airport o) {
+        return this.getCity().compareTo(o.getCity());
     }
 
     public void setCity(String city) {
@@ -38,7 +45,6 @@ public class Airport {
 
         return null;
     }
-
     public static String findAirportCodeBinary (String toFind, Airport[] airports) {
         int high = airports.length;
         int low = 0;
@@ -62,7 +68,10 @@ public class Airport {
         }
         return null;
     }
+
     public static void insertionSort (int[] vals) {
+
+//        Collections.sort(vals);
         int currInd;
         for (int pos=1; pos<vals.length; pos++) {
             currInd = pos;
@@ -72,7 +81,6 @@ public class Airport {
             }
         }
     }
-
     public static void selectionSort (int[] vals) {
         int indexMin;
         boolean shuffle = false;
@@ -91,14 +99,13 @@ public class Airport {
 
         }
     }
+
     public static int[] swap(int[] vals, int indexMin, int i){
         int temp = vals[i];
         vals[i] = vals[indexMin];
         vals[indexMin] = temp;
         return vals;
     }
-
-
 
 }
 

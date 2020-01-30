@@ -2,6 +2,7 @@ package module6;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
@@ -64,7 +65,8 @@ public class EarthquakeCityMap extends PApplet {
 	// NEW IN MODULE 5
 	private CommonMarker lastSelected;
 	private CommonMarker lastClicked;
-	
+	private boolean dispCity;
+
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
 		size(900, 700, OPENGL);
@@ -82,10 +84,10 @@ public class EarthquakeCityMap extends PApplet {
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
 		//earthquakesURL = "test1.atom";
-		//earthquakesURL = "test2.atom";
+//		earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
-		//earthquakesURL = "quiz2.atom";
+		earthquakesURL = "quiz2.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -124,7 +126,7 @@ public class EarthquakeCityMap extends PApplet {
 	    map.addMarkers(quakeMarkers);
 	    map.addMarkers(cityMarkers);
 	    
-	    
+	    sortAndPrint(100);
 	}  // End setup
 	
 	
@@ -132,6 +134,7 @@ public class EarthquakeCityMap extends PApplet {
 		background(0);
 		map.draw();
 		addKey();
+		addKeyCity(dispCity);
 		
 	}
 	
@@ -139,6 +142,18 @@ public class EarthquakeCityMap extends PApplet {
 	// TODO: Add the method:
 	//   private void sortAndPrint(int numToPrint)
 	// and then call that method from setUp
+	public void sortAndPrint (int numToPrint) {
+		List<EarthquakeMarker> earthQuakeList = new ArrayList<EarthquakeMarker>();
+		for (Marker em : quakeMarkers){
+			earthQuakeList.add((EarthquakeMarker)em);
+		}
+		Collections.sort(earthQuakeList);
+		for (int i=0; i < numToPrint; i++) {
+
+			if (i > earthQuakeList.size()-1) { return; }
+			System.out.println(earthQuakeList.get(i).getTitle());
+		}
+	}
 	
 	/** Event handler that gets called automatically when the 
 	 * mouse moves.
@@ -206,10 +221,12 @@ public class EarthquakeCityMap extends PApplet {
 		for (Marker marker : cityMarkers) {
 			if (!marker.isHidden() && marker.isInside(map, mouseX, mouseY)) {
 				lastClicked = (CommonMarker)marker;
+				dispCity = true;
 				// Hide all the other earthquakes and hide
 				for (Marker mhide : cityMarkers) {
 					if (mhide != lastClicked) {
 						mhide.setHidden(true);
+
 					}
 				}
 				for (Marker mhide : quakeMarkers) {
@@ -260,52 +277,54 @@ public class EarthquakeCityMap extends PApplet {
 		for(Marker marker : cityMarkers) {
 			marker.setHidden(false);
 		}
+//		addKeyCity(false);
+		dispCity = false;
 	}
 	
 	// helper method to draw key in GUI
 	private void addKey() {	
 		// Remember you can use Processing's graphics methods here
 		fill(255, 250, 240);
-		
+
 		int xbase = 25;
 		int ybase = 50;
-		
+
 		rect(xbase, ybase, 150, 250);
-		
+
 		fill(0);
 		textAlign(LEFT, CENTER);
 		textSize(12);
 		text("Earthquake Key", xbase+25, ybase+25);
-		
+
 		fill(150, 30, 30);
 		int tri_xbase = xbase + 35;
 		int tri_ybase = ybase + 50;
-		triangle(tri_xbase, tri_ybase-CityMarker.TRI_SIZE, tri_xbase-CityMarker.TRI_SIZE, 
-				tri_ybase+CityMarker.TRI_SIZE, tri_xbase+CityMarker.TRI_SIZE, 
+		triangle(tri_xbase, tri_ybase-CityMarker.TRI_SIZE, tri_xbase-CityMarker.TRI_SIZE,
+				tri_ybase+CityMarker.TRI_SIZE, tri_xbase+CityMarker.TRI_SIZE,
 				tri_ybase+CityMarker.TRI_SIZE);
 
 		fill(0, 0, 0);
 		textAlign(LEFT, CENTER);
 		text("City Marker", tri_xbase + 15, tri_ybase);
-		
+
 		text("Land Quake", xbase+50, ybase+70);
 		text("Ocean Quake", xbase+50, ybase+90);
 		text("Size ~ Magnitude", xbase+25, ybase+110);
-		
+
 		fill(255, 255, 255);
-		ellipse(xbase+35, 
-				ybase+70, 
-				10, 
+		ellipse(xbase+35,
+				ybase+70,
+				10,
 				10);
 		rect(xbase+35-5, ybase+90-5, 10, 10);
-		
+
 		fill(color(255, 255, 0));
 		ellipse(xbase+35, ybase+140, 12, 12);
 		fill(color(0, 0, 255));
 		ellipse(xbase+35, ybase+160, 12, 12);
 		fill(color(255, 0, 0));
 		ellipse(xbase+35, ybase+180, 12, 12);
-		
+
 		textAlign(LEFT, CENTER);
 		fill(0, 0, 0);
 		text("Shallow", xbase+50, ybase+140);
@@ -313,7 +332,7 @@ public class EarthquakeCityMap extends PApplet {
 		text("Deep", xbase+50, ybase+180);
 
 		text("Past hour", xbase+50, ybase+200);
-		
+
 		fill(255, 255, 255);
 		int centerx = xbase+35;
 		int centery = ybase+200;
@@ -322,7 +341,7 @@ public class EarthquakeCityMap extends PApplet {
 		strokeWeight(2);
 		line(centerx-8, centery-8, centerx+8, centery+8);
 		line(centerx-8, centery+8, centerx+8, centery-8);
-		
+
 		
 	}
 
@@ -409,5 +428,77 @@ public class EarthquakeCityMap extends PApplet {
 		}
 		return false;
 	}
+
+	private void displayCityInfo (Marker m) {
+
+	}
+
+	private void addKeyCity (boolean display) {
+		// Remember you can use Processing's graphics methods here
+		fill(0, 0, 0);
+		if (display) {
+
+
+			fill(255, 250, 240);
+
+			int xbase = 25;
+			int ybase = 350;
+
+			rect(xbase, ybase, 150, 150);
+
+			fill(0);
+			textAlign(LEFT, CENTER);
+			textSize(12);
+			text("Quake near city", xbase + 25, ybase + 25);
+
+			fill(150, 30, 30);
+			int tri_xbase = xbase + 35;
+			int tri_ybase = ybase + 50;
+			triangle(tri_xbase, tri_ybase - CityMarker.TRI_SIZE, tri_xbase - CityMarker.TRI_SIZE,
+					tri_ybase + CityMarker.TRI_SIZE, tri_xbase + CityMarker.TRI_SIZE,
+					tri_ybase + CityMarker.TRI_SIZE);
+
+			fill(0, 0, 0);
+			textAlign(LEFT, CENTER);
+			text("Total Quake", tri_xbase + 15, tri_ybase);
+
+//		text("Land Quake", xbase+50, ybase+70);
+//		text("Ocean Quake", xbase+50, ybase+90);
+//		text("Size ~ Magnitude", xbase+25, ybase+110);
+
+			fill(255, 255, 255);
+			ellipse(xbase + 35,
+					ybase + 70,
+					10,
+					10);
+			rect(xbase + 35 - 5, ybase + 90 - 5, 10, 10);
+
+//			fill(color(255, 255, 0));
+//			ellipse(xbase + 35, ybase + 140, 12, 12);
+//			fill(color(0, 0, 255));
+//			ellipse(xbase + 35, ybase + 160, 12, 12);
+//			fill(color(255, 0, 0));
+//			ellipse(xbase + 35, ybase + 180, 12, 12);
+//
+//			textAlign(LEFT, CENTER);
+//			fill(0, 0, 0);
+//		text("Shallow", xbase+50, ybase+140);
+//		text("Intermediate", xbase+50, ybase+160);
+//		text("Deep", xbase+50, ybase+180);
+//
+//		text("Past hour", xbase+50, ybase+200);
+
+//			fill(255, 255, 255);
+//			int centerx = xbase + 35;
+//			int centery = ybase + 200;
+//			ellipse(centerx, centery, 12, 12);
+//
+//			strokeWeight(2);
+//			line(centerx - 8, centery - 8, centerx + 8, centery + 8);
+//			line(centerx - 8, centery + 8, centerx + 8, centery - 8);
+		}
+	}
+
+
 
 }

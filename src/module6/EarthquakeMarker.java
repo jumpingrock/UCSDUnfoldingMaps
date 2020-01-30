@@ -3,6 +3,7 @@ package module6;
 import de.fhpotsdam.unfolding.data.PointFeature;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import java.util.*;
 
 /** Implements a visual marker for earthquakes on an earthquake map
  * 
@@ -10,22 +11,34 @@ import processing.core.PGraphics;
  *
  */
 // TODO: Implement the comparable interface
-public abstract class EarthquakeMarker extends CommonMarker
+public abstract class EarthquakeMarker extends CommonMarker implements Comparable<EarthquakeMarker>
 {
-	
+
+
 	// Did the earthquake occur on land?  This will be set by the subclasses.
 	protected boolean isOnLand;
 
 	// The radius of the Earthquake marker
 	// You will want to set this in the constructor, either
 	// using the thresholds below, or a continuous function
-	// based on magnitude. 
+	// based on magnitude.
 	protected float radius;
-	
-	
+
+
 	// constants for distance
 	protected static final float kmPerMile = 1.6f;
-	
+
+	// TODO: Add the method:
+	public int compareTo(EarthquakeMarker marker) {
+		if(marker.getMagnitude() < this.getMagnitude())
+			return -1;
+		else if (this.getMagnitude() < marker.getMagnitude())
+			return 1;
+		else
+			return 0;
+	}
+
+
 	/** Greater than or equal to this threshold is a moderate earthquake */
 	public static final float THRESHOLD_MODERATE = 5;
 	/** Greater than or equal to this threshold is a light earthquake */
@@ -38,13 +51,14 @@ public abstract class EarthquakeMarker extends CommonMarker
 
 	// ADD constants for colors
 
-	
+
 	// abstract method implemented in derived classes
+
 	public abstract void drawEarthquake(PGraphics pg, float x, float y);
-		
-	
+
+
 	// constructor
-	public EarthquakeMarker (PointFeature feature) 
+	public EarthquakeMarker (PointFeature feature)
 	{
 		super(feature.getLocation());
 		// Add a radius property and then set the properties
@@ -54,10 +68,6 @@ public abstract class EarthquakeMarker extends CommonMarker
 		setProperties(properties);
 		this.radius = 1.75f*getMagnitude();
 	}
-	
-	// TODO: Add the method:
-	// public int compareTo(EarthquakeMarker marker)
-	
 	
 	// calls abstract method drawEarthquake and then checks age and draws X if needed
 	@Override
