@@ -70,7 +70,7 @@ public class EarthquakeCityMap extends PApplet {
 		else {
 //			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
 //			map = new UnfoldingMap(this, 200, 50, 700, 500, new Yahoo.HybridProvider());
-			map = new UnfoldingMap(this, 0, 0, 700, 500, new Microsoft.HybridProvider());
+//			map = new UnfoldingMap(this, 0, 0, 700, 500, new Microsoft.HybridProvider());
 //			map = new UnfoldingMap(this, 200, 50, 700, 500, new AcetateProvider.All());
 
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line

@@ -13,11 +13,12 @@ import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.AbstractShapeMarker;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
-import de.fhpotsdam.unfolding.providers.Google;
-import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
+import de.fhpotsdam.unfolding.providers.*;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
+
+import javax.lang.model.element.Name;
 
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
@@ -56,8 +57,11 @@ public class EarthquakeCityMap extends PApplet {
 	
 	// Markers for each city
 	private List<Marker> cityMarkers;
+	private CityMarker selectedCity;
+
 	// Markers for each earthquake
 	private List<Marker> quakeMarkers;
+	private EarthquakeMarker selectedQuake;
 
 	// A List of country markers
 	private List<Marker> countryMarkers;
@@ -66,6 +70,10 @@ public class EarthquakeCityMap extends PApplet {
 	private CommonMarker lastSelected;
 	private CommonMarker lastClicked;
 	private boolean dispCity;
+	private boolean dispQuake;
+	int citiesInAffectedArea = 0, citiesNotInAffectedArea=0;
+	int quakesNearCity = 0, quakesNotNearCity=0;
+	double avgMagnitude =0;
 
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
@@ -76,6 +84,9 @@ public class EarthquakeCityMap extends PApplet {
 		}
 		else {
 			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+//			map = new UnfoldingMap(this, 200, 50, 700, 500, new Yahoo.HybridProvider());
+//			map = new UnfoldingMap(this, 0, 0, 700, 500, new Microsoft.HybridProvider());
+//			map = new UnfoldingMap(this, 200, 50, 700, 500, new AcetateProvider.All());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 		    //earthquakesURL = "2.5_week.atom";
 		}
@@ -83,11 +94,11 @@ public class EarthquakeCityMap extends PApplet {
 		
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
-		//earthquakesURL = "test1.atom";
+		earthquakesURL = "test1.atom";
 //		earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
-		earthquakesURL = "quiz2.atom";
+//		earthquakesURL = "quiz2.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -135,6 +146,7 @@ public class EarthquakeCityMap extends PApplet {
 		map.draw();
 		addKey();
 		addKeyCity(dispCity);
+		addKeyQuake(dispQuake);
 		
 	}
 	
@@ -221,6 +233,7 @@ public class EarthquakeCityMap extends PApplet {
 		for (Marker marker : cityMarkers) {
 			if (!marker.isHidden() && marker.isInside(map, mouseX, mouseY)) {
 				lastClicked = (CommonMarker)marker;
+				selectedCity = (CityMarker)marker;
 				dispCity = true;
 				// Hide all the other earthquakes and hide
 				for (Marker mhide : cityMarkers) {
@@ -234,7 +247,15 @@ public class EarthquakeCityMap extends PApplet {
 					if (quakeMarker.getDistanceTo(marker.getLocation()) 
 							> quakeMarker.threatCircle()) {
 						quakeMarker.setHidden(true);
+						quakesNotNearCity+=1;
+
+					}else {
+						quakesNearCity +=1;
+						avgMagnitude = avgMagnitude + ((EarthquakeMarker) mhide).getMagnitude();
 					}
+				}
+				if (quakesNearCity != 0) {
+					avgMagnitude = avgMagnitude/quakesNearCity;
 				}
 				return;
 			}
@@ -251,6 +272,8 @@ public class EarthquakeCityMap extends PApplet {
 			EarthquakeMarker marker = (EarthquakeMarker)m;
 			if (!marker.isHidden() && marker.isInside(map, mouseX, mouseY)) {
 				lastClicked = marker;
+				selectedQuake = (EarthquakeMarker) marker;
+				dispQuake = true;
 				// Hide all the other earthquakes and hide
 				for (Marker mhide : quakeMarkers) {
 					if (mhide != lastClicked) {
@@ -261,6 +284,9 @@ public class EarthquakeCityMap extends PApplet {
 					if (mhide.getDistanceTo(marker.getLocation()) 
 							> marker.threatCircle()) {
 						mhide.setHidden(true);
+						citiesNotInAffectedArea+=1;
+					}else {
+						citiesInAffectedArea +=1;
 					}
 				}
 				return;
@@ -277,12 +303,17 @@ public class EarthquakeCityMap extends PApplet {
 		for(Marker marker : cityMarkers) {
 			marker.setHidden(false);
 		}
-//		addKeyCity(false);
 		dispCity = false;
+		dispQuake = false;
+		quakesNotNearCity = 0;
+		quakesNearCity = 0;
+		citiesNotInAffectedArea = 0;
+		citiesInAffectedArea = 0;
+
 	}
-	
+
 	// helper method to draw key in GUI
-	private void addKey() {	
+	private void addKey() {
 		// Remember you can use Processing's graphics methods here
 		fill(255, 250, 240);
 
@@ -342,17 +373,17 @@ public class EarthquakeCityMap extends PApplet {
 		line(centerx-8, centery-8, centerx+8, centery+8);
 		line(centerx-8, centery+8, centerx+8, centery-8);
 
-		
+
 	}
 
-	
-	
-	// Checks whether this quake occurred on land.  If it did, it sets the 
+
+
+	// Checks whether this quake occurred on land.  If it did, it sets the
 	// "country" property of its PointFeature to the country where it occurred
 	// and returns true.  Notice that the helper method isInCountry will
 	// set this "country" property already.  Otherwise it returns false.
 	private boolean isLand(PointFeature earthquake) {
-		
+
 		// IMPLEMENT THIS: loop over all countries to check if location is in any of them
 		// If it is, add 1 to the entry in countryQuakes corresponding to this country.
 		for (Marker country : countryMarkers) {
@@ -360,16 +391,16 @@ public class EarthquakeCityMap extends PApplet {
 				return true;
 			}
 		}
-		
+
 		// not inside any country
 		return false;
 	}
-	
+
 	// prints countries with number of earthquakes
 	// You will want to loop through the country markers or country features
 	// (either will work) and then for each country, loop through
 	// the quakes to count how many occurred in that country.
-	// Recall that the country markers have a "name" property, 
+	// Recall that the country markers have a "name" property,
 	// And LandQuakeMarkers have a "country" property set.
 	private void printQuakes() {
 		int totalWaterQuakes = quakeMarkers.size();
@@ -392,11 +423,11 @@ public class EarthquakeCityMap extends PApplet {
 		}
 		System.out.println("OCEAN QUAKES: " + totalWaterQuakes);
 	}
-	
-	
-	
+
+
+
 	// helper method to test whether a given earthquake is in a given country
-	// This will also add the country property to the properties of the earthquake feature if 
+	// This will also add the country property to the properties of the earthquake feature if
 	// it's in one of the countries.
 	// You should not have to modify this code
 	private boolean isInCountry(PointFeature earthquake, Marker country) {
@@ -406,24 +437,24 @@ public class EarthquakeCityMap extends PApplet {
 		// some countries represented it as MultiMarker
 		// looping over SimplePolygonMarkers which make them up to use isInsideByLoc
 		if(country.getClass() == MultiMarker.class) {
-				
+
 			// looping over markers making up MultiMarker
 			for(Marker marker : ((MultiMarker)country).getMarkers()) {
-					
+
 				// checking if inside
 				if(((AbstractShapeMarker)marker).isInsideByLocation(checkLoc)) {
 					earthquake.addProperty("country", country.getProperty("name"));
-						
+
 					// return if is inside one
 					return true;
 				}
 			}
 		}
-			
+
 		// check if inside country represented by SimplePolygonMarker
 		else if(((AbstractShapeMarker)country).isInsideByLocation(checkLoc)) {
 			earthquake.addProperty("country", country.getProperty("name"));
-			
+
 			return true;
 		}
 		return false;
@@ -438,6 +469,35 @@ public class EarthquakeCityMap extends PApplet {
 		fill(0, 0, 0);
 		if (display) {
 
+			fill(255, 250, 240);
+
+			int xbase = 25;
+			int ybase = 350;
+
+			rect(xbase, ybase, 150, 150);
+
+			fill(0);
+			textAlign(LEFT, CENTER);
+			textSize(12);
+			text("Quake near city" , xbase + 25, ybase + 25);
+
+			fill(150, 30, 30);
+			int tri_xbase = xbase + 5;
+			int tri_ybase = ybase + 50;
+
+			fill(0, 0, 0);
+			textAlign(LEFT, CENTER);
+			text("City Name : " + selectedCity.getStringProperty("name"), tri_xbase , tri_ybase);
+			text("Total Quake near city: " + quakesNearCity, tri_xbase , tri_ybase+25);
+			text("Average Magnitude: " + Math.round(avgMagnitude * 100.0) / 100.0, tri_xbase , tri_ybase+50);
+//			System.out.println("Cities not in affected area" + citiesNotInAffectedArea);
+
+		}
+	}
+	private void addKeyQuake (boolean display) {
+		// Remember you can use Processing's graphics methods here
+		fill(0, 0, 0);
+		if (display) {
 
 			fill(255, 250, 240);
 
@@ -449,53 +509,20 @@ public class EarthquakeCityMap extends PApplet {
 			fill(0);
 			textAlign(LEFT, CENTER);
 			textSize(12);
-			text("Quake near city", xbase + 25, ybase + 25);
+			text("Quake near city" , xbase + 25, ybase + 25);
 
 			fill(150, 30, 30);
-			int tri_xbase = xbase + 35;
+			int tri_xbase = xbase + 5;
 			int tri_ybase = ybase + 50;
-			triangle(tri_xbase, tri_ybase - CityMarker.TRI_SIZE, tri_xbase - CityMarker.TRI_SIZE,
-					tri_ybase + CityMarker.TRI_SIZE, tri_xbase + CityMarker.TRI_SIZE,
-					tri_ybase + CityMarker.TRI_SIZE);
 
 			fill(0, 0, 0);
 			textAlign(LEFT, CENTER);
-			text("Total Quake", tri_xbase + 15, tri_ybase);
+			text("Quake Location : " + selectedQuake.getStringProperty("Title"), tri_xbase , tri_ybase);
+			text("Total city near quake: " + citiesInAffectedArea, tri_xbase , tri_ybase+25);
+//			System.out.println("Quakes not near city" + quakesNotNearCity);
 
-//		text("Land Quake", xbase+50, ybase+70);
-//		text("Ocean Quake", xbase+50, ybase+90);
-//		text("Size ~ Magnitude", xbase+25, ybase+110);
 
-			fill(255, 255, 255);
-			ellipse(xbase + 35,
-					ybase + 70,
-					10,
-					10);
-			rect(xbase + 35 - 5, ybase + 90 - 5, 10, 10);
 
-//			fill(color(255, 255, 0));
-//			ellipse(xbase + 35, ybase + 140, 12, 12);
-//			fill(color(0, 0, 255));
-//			ellipse(xbase + 35, ybase + 160, 12, 12);
-//			fill(color(255, 0, 0));
-//			ellipse(xbase + 35, ybase + 180, 12, 12);
-//
-//			textAlign(LEFT, CENTER);
-//			fill(0, 0, 0);
-//		text("Shallow", xbase+50, ybase+140);
-//		text("Intermediate", xbase+50, ybase+160);
-//		text("Deep", xbase+50, ybase+180);
-//
-//		text("Past hour", xbase+50, ybase+200);
-
-//			fill(255, 255, 255);
-//			int centerx = xbase + 35;
-//			int centery = ybase + 200;
-//			ellipse(centerx, centery, 12, 12);
-//
-//			strokeWeight(2);
-//			line(centerx - 8, centery - 8, centerx + 8, centery + 8);
-//			line(centerx - 8, centery + 8, centerx + 8, centery - 8);
 		}
 	}
 
